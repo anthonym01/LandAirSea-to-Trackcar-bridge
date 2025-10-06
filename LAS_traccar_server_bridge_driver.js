@@ -53,9 +53,17 @@ app.post('/post/test', (req, res) => {//test post
     }
 });
 
+
+// test validation request to LandAirSea API
 logs.info('Making API request to LandAirSea...');
 logs.info('Using credentials:', credentials.LandAirSea);
-axios.post('https://gateway.landairsea.com/Track/Validate', credentials.LandAirSea).then(response => {
+
+
+
+axios.post(
+    'https://gateway.landairsea.com/Track/MyDevices',
+    credentials.LandAirSea,
+).then(response => {
     // Handle the successful response
     console.log('API Response:', response.data);
 
