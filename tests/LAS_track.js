@@ -18,7 +18,7 @@ async function track() {
                 config.traccar.url + '/api/session',
                 params.toString() // Pass the URL-encoded string
             );
-            
+
             traccarSession = response.data;
             console.log('Traccar login successful:', traccarSession);
         } catch (error) {
@@ -36,9 +36,10 @@ async function track() {
         //{ headers: { 'ClientId': config.LandAirSea.ClientId } }
     ).then(response => {//pass data to traccar
         // Handle the successful response
-        console.log('API Response:', response.data);
+        console.log('LAND AIR SEA API Response:', response.data);
 
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + traccarSession.token;//set traccar cookie
+        console.log('Posting to Traccar for device ID:', response.data.devicedetails[1].deviceId);
         axios.post(config.traccar.url + '/api/devices', {
 
             location: {
@@ -63,7 +64,7 @@ async function track() {
                 },
                 extras: {}
             },
-            device_id: response.data.devicedetails[0].deviceId                     // device identifier
+            device_id: response.data.devicedetails[1].deviceId                     // device identifier
         }).then(responsetraccar => {
             console.log('Traccar API Response:', responsetraccar.data);
         }).catch(error => {
