@@ -1,4 +1,4 @@
-const credentials = require('../credentials.json');
+const credentials = require('../configuration.json');
 const axios = require('axios');
 console.log("Validating credentials: ", credentials.LandAirSea);
 
