@@ -7,8 +7,8 @@ const express = require('express');
 const app = express();
 const logs = require('./modules/logger');
 const axios = require('axios');
-const credentials = require('./credentials.json');
-//const database = require('./modules/database');
+const fs = require('fs');
+let credentials = JSON.parse(fs.readFileSync('./credentials.json'));
 
 app.listen(port, () => {
     try {

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node LAS_traccar_server_bridge_driver.js",
     "LAS-validate": "node tests/LAS_validate.js",
-    "LAS-trackbwm":"node tests/LAS_trackbmw116.js",
+    "LAS-track":"node tests/LAS_track.js",
     "test-database": "node tests/database_test.js",
     "test-logs": "node tests/test_logger.js"
   },
