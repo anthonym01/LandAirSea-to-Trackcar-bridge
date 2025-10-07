@@ -4,10 +4,10 @@ let traccarSession = null;
 
 console.log("Tracking with configuration: ", config);
 
-async function track() {
+async function track() {//main tracking function prototype
 
+    //login to traccar if no session
     if (!traccarSession || traccarSession == null) {
-        //login to traccar
         try {
             const params = new URLSearchParams();
             params.append('email', config.traccar.username);
@@ -26,6 +26,7 @@ async function track() {
             return; // Exit the function if login fails
         }
     }
+
     //reset axios headers to default
     axios.defaults.headers.common = {};//set traccar cookie later
 
@@ -36,7 +37,7 @@ async function track() {
         { headers: { 'ClientId': config.LandAirSea.clientToken } }
     ).then(responseLAS => {//pass data to traccar
         // Handle the successful response
-        console.log('LAND AIR SEA API Response:', responseLAS.data);
+        //console.log('LAND AIR SEA API Response:', responseLAS.data);
         /* Example data from LAS
             username: 'something',
             devicedetails: [
@@ -71,37 +72,42 @@ async function track() {
         ]
             */
 
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + traccarSession.token;//set traccar cookie
+        //loop through devices in response
+        responseLAS.data.devicedetails.forEach(device => {
+            console.log(`Device ID: ${device.deviceId}, Lat: ${device.latitude}, Lon: ${device.longitude}, Speed (km/h): ${device.speed_kmh}, Battery: ${device.battery}%`);
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + traccarSession.token;//set traccar cookie
 
-        console.log('Posting to Traccar for device ID:', responseLAS.data.devicedetails[1].deviceId);
+            console.log('Posting to Traccar for device ID:', device.deviceId);
 
-        //const traccar_protocol_port = 5055;
-
-        // Replace with your actual server URL, or use config.traccar.url if it includes the port
-        //const server_base_url = config.traccar.url.replace(/:\d+/, `:${traccar_protocol_port}`);
-
-        // translate gps data to traccar format
-        const gpsData = {
-            id: Number(responseLAS.data.devicedetails[1].deviceId), // The unique ID you set for the device
-            lat:responseLAS.data.devicedetails[1].latitude,
-            lon: responseLAS.data.devicedetails[1].longitude,
-            timestamp: Date.now(), // Current time in milliseconds
-            speed: responseLAS.data.devicedetails[1].speed_kmh * 0.539957, // in knots
-            altitude: responseLAS.data.devicedetails[1].elevation, // in meters
-            valid: true,
-            batt: responseLAS.data.devicedetails[1].battery // battery level percentage
-        };
-
-        axios.get(
-            `${config.traccar.url_OsmAndport}/`, // The path is just the root '/'
-            {
-                params: gpsData // Axios will automatically convert this object to a query string
+            let charging = false;
+            if (device.voltage != -1) {
+                console.log(`Device ${device.deviceId} voltage: ${device.voltage}V`);
+                charging = true;
             }
-        ).then(responseTraccar => {
-            console.log(`Successfully posted GPS data for device ${gpsData.id}. Status: ${responseTraccar.status}`);
+            const gpsData = {
+                id: Number(device.deviceId), // The unique ID you set for the device
+                lat: device.latitude,
+                lon: device.longitude,
+                timestamp: Date.now(), // Current time in milliseconds
+                speed: device.speed_kmh * 0.539957, // in knots
+                altitude: device.elevation, // in meters
+                valid: true,
+                batt: device.battery, // battery level percentage
+                charge: charging // voltage level
+            };
 
-        }).catch(error => {
-            console.error(`Error sending GPS data: ${error.message}`);
+            axios.get(
+                `${config.traccar.url_OsmAndport}/`,
+                {
+                    params: gpsData // Axios will automatically convert this object to a query string
+                }
+            ).then(responseTraccar => {
+                console.log(`Successfully posted GPS data for device ${gpsData.id}. Status: ${responseTraccar.status}`);
+
+            }).catch(error => {
+                console.error(`Error sending GPS data: ${error.message}`);
+            });
+
         });
 
 

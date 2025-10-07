@@ -1,13 +1,12 @@
 {
   "name": "LAS_bridge",
   "version": "1.0.0",
-  "description": "A basic express template",
+  "description": "a service to translate land air sea's API to traccar's API",
   "main": "index.js",
   "scripts": {
     "start": "node LAS_traccar_server_bridge_driver.js",
-    "LAS-validate": "node tests/LAS_validate.js",
-    "LAS-track":"node tests/LAS_track.js",
-    "test-database": "node tests/database_test.js",
+    "LAS-validate-test": "node tests/LAS_validate.js",
+    "LAS-track-loop-test":"node tests/LAS_track.js",
     "test-logs": "node tests/test_logger.js"
   },
   "keywords": [
