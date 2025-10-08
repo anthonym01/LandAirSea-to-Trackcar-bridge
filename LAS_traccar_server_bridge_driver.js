@@ -1,5 +1,7 @@
 //'node Server.js'
-//This is the server file, it will handle all requests and responses
+//webpage for configuration and status
+//bridge between LandAirSea API and Traccar server
+//requires devices to be preconfigured in Traccar with matching device IDs
 
 //Server configuration
 const port = 8082;// 80, 443, 8082 nginx
@@ -8,7 +10,7 @@ const app = express();
 const logs = require('./modules/logger');
 const axios = require('axios');
 const fs = require('fs');
-let credentials = JSON.parse(fs.readFileSync('./credentials.json'));
+let credentials = JSON.parse(fs.readFileSync('configuration.json'));
 
 app.listen(port, () => {
     try {
@@ -52,8 +54,3 @@ app.post('/post/test', (req, res) => {//test post
         logs.error('Catastrophy on test post: ', err);
     }
 });
-
-
-// test validation request to LandAirSea API
-logs.info('Making API request to LandAirSea...');
-logs.info('Using credentials:', credentials.LandAirSea);

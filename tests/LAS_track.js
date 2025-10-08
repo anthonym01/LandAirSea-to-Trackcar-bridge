@@ -74,6 +74,7 @@ async function track() {//main tracking function prototype
 
         //loop through devices in response
         responseLAS.data.devicedetails.forEach(device => {
+            console.log(`@ ${new Date().toISOString()}`);
             console.log(`Device ID: ${device.deviceId}, Lat: ${device.latitude}, Lon: ${device.longitude}, Speed (km/h): ${device.speed_kmh}, Battery: ${device.battery}%`);
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + traccarSession.token;//set traccar cookie
 
