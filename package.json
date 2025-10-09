@@ -1,12 +1,12 @@
 {
-  "name": "LAS_bridge",
+  "name": "las_bridge",
   "version": "1.0.0",
   "description": "a service to translate land air sea's API to traccar's API",
   "main": "index.js",
   "scripts": {
     "start": "node LAS_traccar_server_bridge_driver.js",
     "LAS-validate-test": "node tests/LAS_validate.js",
-    "LAS-track-loop-test":"node tests/LAS_track.js",
+    "LAS-track-loop-test":"node tests/test_track.js",
     "test-logs": "node tests/test_logger.js"
   },
   "keywords": [
