@@ -68,7 +68,11 @@ async function track() {//main tracking function prototype
     logs.info(`Pulling data from LandAirSea @ ${new Date()}`);
     axios.post(
         'https://gateway.landairsea.com/Track/MyDevices',
-        config.LandAirSea,
+        {
+            clientToken: config.LandAirSea.clientToken,
+            username: config.LandAirSea.username,
+            password: config.LandAirSea.password
+        },
         { headers: { 'ClientId': config.LandAirSea.clientToken } }
     ).then(responseLAS => {//pass data to traccar
         /* 

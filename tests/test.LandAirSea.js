@@ -2,7 +2,7 @@ const config = require('../configuration.json');
 const axios = require('axios');
 let traccarSession = null;
 
-console.log("Tracking with configuration: ", config);
+console.log("Test LandAirSea Tracking with configuration: ", config);
 
 async function track() {//main tracking function prototype
 
@@ -35,7 +35,11 @@ async function track() {//main tracking function prototype
     //Pull post from land air sea
     axios.post(
         'https://gateway.landairsea.com/Track/MyDevices',
-        config.LandAirSea,
+        {
+            clientToken: config.LandAirSea.clientToken,
+            username: config.LandAirSea.username,
+            password: config.LandAirSea.password
+        },
         { headers: { 'ClientId': config.LandAirSea.clientToken } }
     ).then(responseLAS => {//pass data to traccar
         /* 

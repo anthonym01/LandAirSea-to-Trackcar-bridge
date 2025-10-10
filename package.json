@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node LAS_traccar_server_bridge_driver.js",
     "LAS-validate-test": "node tests/LAS_validate.js",
-    "LAS-track-loop-test":"node tests/test_track.js",
+    "LAS-track-loop-test":"node tests/test.LandAirSea.js",
+    "trackerone-test":"node tests/test.tracker.one.js",
     "test-logs": "node tests/test_logger.js"
   },
   "keywords": [
