@@ -10,7 +10,40 @@ const app = express();
 const logs = require('./modules/logger');
 const axios = require('axios');
 const fs = require('fs');
-let config = JSON.parse(fs.readFileSync('configuration.json'));
+
+let config;
+//load configuration
+try {
+    config = JSON.parse(fs.readFileSync('configuration.json'));
+} catch (error) {
+    logs.error('Error loading configuration.json: ', error);
+    //Create a default configuration file
+    config = {
+        LandAirSea: {
+            clientToken: "00000000-0000-0000-0000-00000000-0000",
+            username: "test1",
+            password: "test12",
+        },
+        traccar: {
+            url_webui: "http://0.0.0.0:8082",
+            url_OsmAndport: "http://0.0.0.0:5055",
+            username: "testadmin",
+            password: "testadmin",
+            device_id_translation: ["default"]
+        },
+        update_interval: 60
+    };
+
+    try {
+        fs.writeFileSync('configuration.json', JSON.stringify(config, null, 4));
+        logs.info('A default configuration.json file has been created. Please edit it with your settings and restart the server.');
+    } catch (error) {
+        console.error('Failed to create default configuration.json file: ', error);
+        console.error('Please Make sure this folder is writable and restart the server.');
+    }
+
+}
+
 let updateinterval = null;
 let traccarSession = null;
 
@@ -20,12 +53,15 @@ app.listen(port, () => {
         logs.info('Server starting');//log server start
         setTimeout(() => {
             logs.info('Running on port ', port);
-        logs.info('Process ID: ', process.pid);
-        logs.info('Process path: ', process.cwd());
+            logs.info('Process ID: ', process.pid);
+            logs.info('Process path: ', process.cwd());
         }, 3000);//wait 3 seconds for splash
-        
+
         track();
-        updateinterval = setInterval(() => { track() }, 60000);
+        updateinterval = setInterval(() => {//set tracking interval
+            track();
+        }, config.update_interval * 1000);
+
     } catch (error) {
         logs.error('Catastrophy on server start: ', error);
     }
